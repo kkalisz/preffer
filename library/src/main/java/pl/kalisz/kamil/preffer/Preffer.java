@@ -18,15 +18,13 @@ public class Preffer
     {
         if(myPrefferClass == null)
         {
-
+            throw new NullPointerException("You can't create preferences from null class");
         }
 
         if(!myPrefferClass.isInterface())
         {
-
+            throw new IllegalArgumentException("You can create preferences only from interface");
         }
-
-
         return (V) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{myPrefferClass}, new PrefferInvocationHandler());
     }
 
