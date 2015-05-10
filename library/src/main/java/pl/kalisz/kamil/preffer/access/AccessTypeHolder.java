@@ -18,15 +18,15 @@ public class AccessTypeHolder
 
         if(parameterTypes.length > 1)
         {
-
+            throw new IllegalArgumentException("Save method must have exactly one parameter, load method can't have parameters");
         }
 
-        boolean isReturn = returnType != Void.class;
+        boolean isReturn = returnType != void.class;
         boolean isParameter = parameterTypes.length == 1;
 
         if(isReturn == isParameter)
         {
-
+            throw new IllegalArgumentException("Access Save method should have void return type and one parameter, Load method should have non void return type on zero parameters ");
         }
 
         if(isParameter)

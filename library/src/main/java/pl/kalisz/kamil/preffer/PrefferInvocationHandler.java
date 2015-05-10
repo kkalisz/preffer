@@ -3,6 +3,7 @@ package pl.kalisz.kamil.preffer;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+import pl.kalisz.kamil.preffer.access.AccessTypeHolder;
 import pl.kalisz.kamil.preffer.annotations.SaveValue;
 import pl.kalisz.kamil.preffer.store.ProfileStore;
 import pl.kalisz.kamil.preffer.store.SaveValueHelper;
@@ -30,8 +31,9 @@ public class PrefferInvocationHandler implements InvocationHandler
             {
                 saveStore = new ProfileStore(saveStore,"TODO");
                 String key = saveValueAnnotation.key();
-                Class accesClass = saveValueHelper.getAccesValueClass();
-                switch (saveValueHelper.getAccessTypeHolder()) {
+                AccessTypeHolder accessTypeHolder = saveValueHelper.getAccessTypeHolder();
+                Class accesClass = accessTypeHolder.getAccessValueClass();
+                switch (accessTypeHolder.getAccessType()) {
                     case SET:
                         //TODO conversion
                         saveStore.getValue(key);
