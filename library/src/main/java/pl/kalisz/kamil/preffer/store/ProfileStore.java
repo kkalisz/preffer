@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public class ProfileStore implements Store, Serializable
 {
+    private static final String DELIMITER = "[@]";
     private Store delegate;
 
     private String profile;
@@ -40,6 +41,7 @@ public class ProfileStore implements Store, Serializable
      */
     private String generateProfileKey(String valueKey)
     {
-        return valueKey; // TODO
+        // FIXME There can be situation that someone use our DELIMITER value as part of key or profile
+        return String.format("%s%s%s",profile, DELIMITER,valueKey);
     }
 }

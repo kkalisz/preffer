@@ -6,12 +6,14 @@ import junit.framework.TestCase;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
+import pl.kalisz.kamil.preffer.MethodUtils;
+
 /**
  * Created by kkalisz on 10.05.15.
  */
 public class AccessTypeHolderTest extends TestCase {
     public void testVoidMethodWithNoParamsThrowException() {
-        Method method = extractMethod(TestClassWithMethods.class, "voidMethodWithNoParam");
+        Method method = MethodUtils.extractMethod(TestClassWithMethods.class, "voidMethodWithNoParam");
 
         try {
             AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
@@ -24,7 +26,7 @@ public class AccessTypeHolderTest extends TestCase {
 
     public void testVoidMethodWithOneParamIsSetAccessTypeWithStringParam()
     {
-        Method method = extractMethod(TestClassWithMethods.class, "voidMethodWithOneParam");
+        Method method = MethodUtils.extractMethod(TestClassWithMethods.class, "voidMethodWithOneParam");
 
         AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
 
@@ -33,7 +35,7 @@ public class AccessTypeHolderTest extends TestCase {
     }
 
     public void testVoidMethodWithTwoParamsThrowException() {
-        Method method = extractMethod(TestClassWithMethods.class, "voidMethodWithTwoParams");
+        Method method = MethodUtils.extractMethod(TestClassWithMethods.class, "voidMethodWithTwoParams");
 
         try {
             AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
@@ -46,7 +48,7 @@ public class AccessTypeHolderTest extends TestCase {
 
     public void testStringMethodWithNoParamIsGetAccessTypeWithBigDecimalParam()
     {
-        Method method = extractMethod(TestClassWithMethods.class, "stringMethodWithNoParam");
+        Method method = MethodUtils.extractMethod(TestClassWithMethods.class, "stringMethodWithNoParam");
 
         AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
 
@@ -55,7 +57,7 @@ public class AccessTypeHolderTest extends TestCase {
     }
 
     public void testStringMethodWithOneParamThrowException() {
-        Method method = extractMethod(TestClassWithMethods.class, "stringMethodWithOneParam");
+        Method method = MethodUtils.extractMethod(TestClassWithMethods.class, "stringMethodWithOneParam");
 
         try {
             AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
@@ -67,7 +69,7 @@ public class AccessTypeHolderTest extends TestCase {
     }
 
     public void testStringMethodWithTwoParamsThrowException() {
-        Method method = extractMethod(TestClassWithMethods.class, "stringMethodWithTwoParams");
+        Method method = MethodUtils.extractMethod(TestClassWithMethods.class, "stringMethodWithTwoParams");
 
         try {
             AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
@@ -78,18 +80,5 @@ public class AccessTypeHolderTest extends TestCase {
         }
     }
 
-
-
-
-    private Method extractMethod(Class classToExtractMethods, String methodName) {
-        Method[] declaringMethods = classToExtractMethods.getDeclaredMethods();
-        for (int i = 0; i < declaringMethods.length; i++) {
-            Method method = declaringMethods[i];
-            if (method.getName().equals(methodName)) {
-                return method;
-            }
-        }
-        return null;
-    }
 
 }

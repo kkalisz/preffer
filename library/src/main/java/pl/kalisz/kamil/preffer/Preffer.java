@@ -2,12 +2,18 @@ package pl.kalisz.kamil.preffer;
 
 import java.lang.reflect.Proxy;
 
+import pl.kalisz.kamil.preffer.store.Store;
+
 /**
  * Main class that handle creation of Preferences
  */
 public class Preffer
 {
 
+
+    private Store store;
+
+    private String profile;
 
     /**
      * @param myPrefferClass  class of interface of preferences to create
@@ -25,7 +31,19 @@ public class Preffer
         {
             throw new IllegalArgumentException("You can create preferences only from interface");
         }
-        return (V) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{myPrefferClass}, new PrefferInvocationHandler());
+        PrefferInvocationHandler invocationHandler = new PrefferInvocationHandler(store, profile);
+        return (V) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{myPrefferClass}, invocationHandler);
     }
+
+    public void setStore(Store store)
+    {
+        this.store = store;
+    }
+
+    public void setProfile(String profile)
+    {
+        this.profile = profile;
+    }
+
 
 }
