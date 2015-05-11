@@ -1,7 +1,10 @@
 package pl.kalisz.kamil.preffer;
 
+import android.content.Context;
+
 import java.lang.reflect.Proxy;
 
+import pl.kalisz.kamil.preffer.store.SharedPreferencesStore;
 import pl.kalisz.kamil.preffer.store.Store;
 
 /**
@@ -14,6 +17,11 @@ public class Preffer
     private Store store;
 
     private String profile;
+
+    public Preffer(Store store)
+    {
+       this.store = store;
+    }
 
     /**
      * @param myPrefferClass  class of interface of preferences to create

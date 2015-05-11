@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import pl.kalisz.kamil.preffer.access.AccessTypeHolder;
 import pl.kalisz.kamil.preffer.annotations.SaveValue;
+import pl.kalisz.kamil.preffer.store.PersistentStore;
 import pl.kalisz.kamil.preffer.store.ProfileStore;
 import pl.kalisz.kamil.preffer.store.Store;
 
@@ -30,6 +31,10 @@ public class PrefferInvocationHandler implements InvocationHandler
 
         Store saveStore = delegate;
         SaveValue saveValueAnnotation = saveValueHelper.getAnnotation();
+        if(saveValueAnnotation.persistent())
+        {
+            saveStore = new PersistentStore(saveStore);
+        }
         if (saveValueAnnotation.profile()) {
             saveStore = new ProfileStore(saveStore, profile);
         }
@@ -41,7 +46,7 @@ public class PrefferInvocationHandler implements InvocationHandler
                 //TODO conversion
                 saveStore.getValue(key);
                 break;
-            //TODO conversion
+                 //TODO conversion
             case GET:
                 saveStore.setValue(key, null);
                 break;
