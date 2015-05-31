@@ -16,7 +16,7 @@ public class SetUtils
         Set<String> filteredKeys = new HashSet<>();
         for(String key : setToFilter)
         {
-            if(key.startsWith(prefix))
+            if(key != null && key.startsWith(prefix))
             {
                 filteredKeys.add(key);
             }
