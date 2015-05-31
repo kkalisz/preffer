@@ -9,15 +9,14 @@ import junit.framework.Assert;
 
 import pl.kalisz.kamil.preffer.store.SharedPreferencesStore;
 
-/**
- * Created by kkalisz on 10.05.15.
- */
+
 public class PrefferSharedPreferenceStoreTest extends ActivityInstrumentationTestCase2
 {
     private static final String TEST_PREFERENCES = "TEST_PREFERENCES";
 
     public PrefferSharedPreferenceStoreTest() {
         super(Activity.class);
+        setName("name");
     }
 
     private Preffer preffer;
@@ -31,7 +30,7 @@ public class PrefferSharedPreferenceStoreTest extends ActivityInstrumentationTes
 
     }
 
-    public void tesSetAndGetValueReturnPoperValue()
+    public void testSetAndGetValueReturnProperValue()
     {
         TestPreferenceInterface testPreferenceInterface = preffer.preffer(TestPreferenceInterface.class);
         String value = "MyValue";

@@ -5,11 +5,10 @@ import android.test.ActivityUnitTestCase;
 
 import junit.framework.Assert;
 
+import java.util.Set;
+
 import pl.kalisz.kamil.preffer.store.Store;
 
-/**
- * Created by kkalisz on 10.05.15.
- */
 public class PrefferTest extends ActivityUnitTestCase<Activity>
 {
     public PrefferTest() {
@@ -30,6 +29,11 @@ public class PrefferTest extends ActivityUnitTestCase<Activity>
 
             @Override
             public String getValue(String key) {
+                return null;
+            }
+
+            @Override
+            public Set<String> getKeys() {
                 return null;
             }
         });
