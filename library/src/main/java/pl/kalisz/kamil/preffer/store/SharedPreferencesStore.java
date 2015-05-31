@@ -2,8 +2,11 @@ package pl.kalisz.kamil.preffer.store;
 
 import android.content.SharedPreferences;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- * Created by kkalisz on 10.05.15.
+ * Store implementation that uses android {@link SharedPreferences}
  */
 public class SharedPreferencesStore implements Store {
 
@@ -23,5 +26,10 @@ public class SharedPreferencesStore implements Store {
     @Override
     public String getValue(String key) {
         return sharedPreferences.getString(key,null);
+    }
+
+    @Override
+    public Set<String> getKeys() {
+        return new HashSet<>(sharedPreferences.getAll().keySet());
     }
 }

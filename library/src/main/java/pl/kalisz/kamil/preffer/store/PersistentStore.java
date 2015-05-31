@@ -1,7 +1,12 @@
 package pl.kalisz.kamil.preffer.store;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import pl.kalisz.kamil.preffer.SetUtils;
+
 /**
- * Created by kkalisz on 10.05.15.
+ * Store implementation for marking preferences that should be persistent
  */
 public class PersistentStore implements Store {
     private static final String DELIMITER = "[$]";
@@ -28,6 +33,13 @@ public class PersistentStore implements Store {
         return delegate.getValue(generateProfileKey(key));
     }
 
+    @Override
+    public Set<String> getKeys()
+    {
+        Set<String> allDelegateKeys = delegate.getKeys();
+        String keyPrefix = String.format("%s%s",PERSISTENT_KEY_PREFIX,DELIMITER);
+        return SetUtils.filterSetByPrefix(allDelegateKeys,keyPrefix);
+    }
     /**
      * @param valueKey original preference key
      * @return key with added information about persistence

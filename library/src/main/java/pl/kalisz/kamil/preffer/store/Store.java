@@ -1,5 +1,7 @@
 package pl.kalisz.kamil.preffer.store;
 
+import java.util.Set;
+
 /**
  *  Interface that provides read and save operations, based on key
  */
@@ -16,4 +18,9 @@ public interface Store
      * @return String representation of saved object
      */
     String getValue(String key);
+
+    /**
+     * @return set of keys of values saved in this store
+     */
+    Set<String> getKeys();
 }

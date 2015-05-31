@@ -1,6 +1,10 @@
 package pl.kalisz.kamil.preffer.store;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import pl.kalisz.kamil.preffer.SetUtils;
 
 /**
  * Store implementation that can handle multi-user
@@ -33,6 +37,14 @@ public class ProfileStore implements Store, Serializable
     public String getValue(String key)
     {
         return delegate.getValue(generateProfileKey(key));
+    }
+
+    @Override
+    public Set<String> getKeys()
+    {
+        Set<String> allDelegateKeys = delegate.getKeys();
+        String keyPrefix = String.format("%s%s",profile,DELIMITER);
+        return SetUtils.filterSetByPrefix(allDelegateKeys,keyPrefix);
     }
 
     /**
