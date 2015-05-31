@@ -26,7 +26,6 @@ public class PrefferInvocationHandler implements InvocationHandler
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-        //TODO should be exception throwed when someone invoke method that is not annotated with SaveValue ??
         SaveValueHelper saveValueHelper = new SaveValueHelper(method);
 
         Store saveStore = delegate;
@@ -42,13 +41,12 @@ public class PrefferInvocationHandler implements InvocationHandler
         AccessTypeHolder accessTypeHolder = saveValueHelper.getAccessTypeHolder();
         Class accesClass = accessTypeHolder.getAccessValueClass();
         switch (accessTypeHolder.getAccessType()) {
-            case SET:
-                //TODO conversion
-                saveStore.getValue(key);
-                break;
-                 //TODO conversion
             case GET:
-                saveStore.setValue(key, null);
+                //TODO conversion
+                return saveStore.getValue(key);
+                 //TODO conversion
+            case SET:
+                saveStore.setValue(key, args[0].toString());
                 break;
 
         }
