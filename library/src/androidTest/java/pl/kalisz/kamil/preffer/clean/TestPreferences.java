@@ -15,9 +15,9 @@ public interface TestPreferences
     @SaveValue(key = NON_PERSISTENT)
     void saveNonPersistentValue(String value);
 
-    @SaveValue(key = PERSISTENT)
+    @SaveValue(key = PERSISTENT,persistent = true)
     String getPersistentValue();
 
-    @SaveValue(key = PERSISTENT)
+    @SaveValue(key = PERSISTENT,persistent = true)
     void savePersistentValue(String value);
 }

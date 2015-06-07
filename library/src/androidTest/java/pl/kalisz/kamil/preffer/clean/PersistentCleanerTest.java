@@ -13,14 +13,14 @@ import junit.framework.Assert;
 import pl.kalisz.kamil.preffer.Preffer;
 import pl.kalisz.kamil.preffer.store.SharedPreferencesStore;
 
-public class NonPersistentCleanerTest extends ActivityUnitTestCase<Activity>
+public class PersistentCleanerTest extends ActivityUnitTestCase<Activity>
 {
 
     private static final String TEST_PREFERENCES = "TEST_PREF";
     private Preffer preffer;
     private SharedPreferencesStore store;
 
-    public NonPersistentCleanerTest() {
+    public PersistentCleanerTest() {
         super(Activity.class);
     }
 
@@ -40,14 +40,14 @@ public class NonPersistentCleanerTest extends ActivityUnitTestCase<Activity>
         testPreferences.saveNonPersistentValue("someValue");
         testPreferences.savePersistentValue("someOtherValue");
 
-        Cleaner nonPersistentCleaner = new NonPersistentCleaner();
-        nonPersistentCleaner.clean(store);
+        Cleaner persistentCleaner = new PersistantCleaner();
+        persistentCleaner.clean(store);
 
         String persistentValue = testPreferences.getPersistentValue();
         String nonPersistentValue = testPreferences.getNonPersistentValue();
 
-        Assert.assertTrue(TextUtils.isEmpty(nonPersistentValue));
-        Assert.assertFalse(TextUtils.isEmpty(persistentValue));
+        Assert.assertTrue(TextUtils.isEmpty(persistentValue));
+        Assert.assertFalse(TextUtils.isEmpty(nonPersistentValue));
     }
 
 }

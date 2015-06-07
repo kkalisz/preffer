@@ -1,6 +1,7 @@
 package pl.kalisz.kamil.preffer.store;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,30 +31,21 @@ public class ProfileStore implements Store, Serializable
     @Override
     public void setValue(String key, String value)
     {
-        delegate.setValue(generateProfileKey(key), value);
+        delegate.setValue(new ContextKey(profile,key).generateContextKey(), value);
     }
 
     @Override
     public String getValue(String key)
     {
-        return delegate.getValue(generateProfileKey(key));
+        return delegate.getValue(new ContextKey(profile,key).generateContextKey());
     }
 
     @Override
     public Set<String> getKeys()
     {
         Set<String> allDelegateKeys = delegate.getKeys();
-        String keyPrefix = String.format("%s%s",profile,DELIMITER);
-        return SetUtils.filterSetByPrefix(allDelegateKeys,keyPrefix);
+        Collection<ContextKey> contextKeys = ContextKeyUtils.filterByContext(allDelegateKeys, profile);
+        return ContextKeyUtils.getRawKeys(contextKeys);
     }
 
-    /**
-     * @param valueKey original preference key
-     * @return key with added information about profile
-     */
-    private String generateProfileKey(String valueKey)
-    {
-        // FIXME There can be situation that someone use our DELIMITER value as part of key or profile
-        return String.format("%s%s%s",profile, DELIMITER,valueKey);
-    }
 }

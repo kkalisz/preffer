@@ -1,5 +1,7 @@
 package pl.kalisz.kamil.preffer.store;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,27 +27,20 @@ public class PersistentStore implements Store {
 
     @Override
     public void setValue(String key, String value) {
-        delegate.setValue(generateProfileKey(key), value);
+        delegate.setValue(new ContextKey(PERSISTENT_KEY_PREFIX,key).generateContextKey(), value);
     }
 
     @Override
     public String getValue(String key) {
-        return delegate.getValue(generateProfileKey(key));
+        return delegate.getValue(new ContextKey(PERSISTENT_KEY_PREFIX, key).generateContextKey());
     }
 
     @Override
     public Set<String> getKeys()
     {
         Set<String> allDelegateKeys = delegate.getKeys();
-        String keyPrefix = String.format("%s%s",PERSISTENT_KEY_PREFIX,DELIMITER);
-        return SetUtils.filterSetByPrefix(allDelegateKeys,keyPrefix);
+        Collection<ContextKey> contextKeys = ContextKeyUtils.filterByContext(allDelegateKeys, PERSISTENT_KEY_PREFIX);
+        return ContextKeyUtils.getRawKeys(contextKeys);
     }
-    /**
-     * @param valueKey original preference key
-     * @return key with added information about persistence
-     */
-    private String generateProfileKey(String valueKey) {
-        // FIXME There can be situation that someone use our DELIMITER value as part of key
-        return String.format("%s%s%s", PERSISTENT_KEY_PREFIX, DELIMITER, valueKey);
-    }
+
 }
