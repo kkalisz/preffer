@@ -30,12 +30,12 @@ public class PrefferInvocationHandler implements InvocationHandler
 
         Store saveStore = delegate;
         SaveValue saveValueAnnotation = saveValueHelper.getAnnotation();
+        if (saveValueAnnotation.profile()) {
+            saveStore = new ProfileStore(saveStore, profile);
+        }
         if(saveValueAnnotation.persistent())
         {
             saveStore = new PersistentStore(saveStore);
-        }
-        if (saveValueAnnotation.profile()) {
-            saveStore = new ProfileStore(saveStore, profile);
         }
         String key = saveValueAnnotation.key();
         AccessTypeHolder accessTypeHolder = saveValueHelper.getAccessTypeHolder();
