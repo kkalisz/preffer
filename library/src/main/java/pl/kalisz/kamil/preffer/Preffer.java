@@ -4,6 +4,8 @@ import android.content.Context;
 
 import java.lang.reflect.Proxy;
 
+import pl.kalisz.kamil.preffer.serilizer.JsonSerializer;
+import pl.kalisz.kamil.preffer.serilizer.Serializer;
 import pl.kalisz.kamil.preffer.store.SharedPreferencesStore;
 import pl.kalisz.kamil.preffer.store.Store;
 
@@ -18,9 +20,35 @@ public class Preffer
 
     private String profile;
 
+    private Serializer serializer;
+
+    /**
+     * @param store that will store our preferences
+     */
     public Preffer(Store store)
     {
-       this.store = store;
+       this(store,new JsonSerializer());
+    }
+
+    /**
+     * @param store
+     * @param serializer
+     */
+    public Preffer(Store store,Serializer serializer)
+    {
+        this(store,serializer,null);
+    }
+
+    public Preffer(Store store, String profile)
+    {
+        this(store,new JsonSerializer(),profile);
+    }
+
+    public Preffer(Store store, Serializer serializer,String profile)
+    {
+        this.store = store;
+        this.profile = profile;
+        this.serializer = serializer;
     }
 
     /**
@@ -39,19 +67,12 @@ public class Preffer
         {
             throw new IllegalArgumentException("You can create preferences only from interface");
         }
-        PrefferInvocationHandler invocationHandler = new PrefferInvocationHandler(store, profile);
+        PrefferInvocationHandler invocationHandler = new PrefferInvocationHandler(store, profile,serializer);
         return (V) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{myPrefferClass}, invocationHandler);
     }
 
-    public void setStore(Store store)
-    {
-        this.store = store;
-    }
 
-    public void setProfile(String profile)
-    {
-        this.profile = profile;
-    }
+
 
 
 }

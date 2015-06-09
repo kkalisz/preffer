@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 
 import pl.kalisz.kamil.preffer.access.AccessTypeHolder;
 import pl.kalisz.kamil.preffer.annotations.SaveValue;
+import pl.kalisz.kamil.preffer.serilizer.JsonSerializer;
+import pl.kalisz.kamil.preffer.serilizer.Serializer;
 import pl.kalisz.kamil.preffer.store.PersistentStore;
 import pl.kalisz.kamil.preffer.store.ProfileStore;
 import pl.kalisz.kamil.preffer.store.Store;
@@ -18,10 +20,14 @@ public class PrefferInvocationHandler implements InvocationHandler
 
     private String profile;
 
-    public PrefferInvocationHandler(Store delegate, String profile) {
+    private Serializer serializer = new JsonSerializer();
+
+    public PrefferInvocationHandler(Store delegate, String profile,Serializer serializer) {
         this.profile = profile;
         this.delegate = delegate;
+        this.serializer = serializer;
     }
+
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -42,11 +48,9 @@ public class PrefferInvocationHandler implements InvocationHandler
         Class accesClass = accessTypeHolder.getAccessValueClass();
         switch (accessTypeHolder.getAccessType()) {
             case GET:
-                //TODO conversion
-                return saveStore.getValue(key);
-                 //TODO conversion
+                return serializer.deserialize(accesClass, saveStore.getValue(key));
             case SET:
-                saveStore.setValue(key, args[0].toString());
+                saveStore.setValue(key, serializer.serialize(accesClass,args[0]));
                 break;
 
         }
