@@ -5,8 +5,8 @@ import java.lang.reflect.Method;
 
 import pl.kalisz.kamil.preffer.access.AccessTypeHolder;
 import pl.kalisz.kamil.preffer.annotations.SaveValue;
-import pl.kalisz.kamil.preffer.serilizer.JsonSerializer;
-import pl.kalisz.kamil.preffer.serilizer.Serializer;
+import pl.kalisz.kamil.preffer.serializer.JsonSerializer;
+import pl.kalisz.kamil.preffer.serializer.Serializer;
 import pl.kalisz.kamil.preffer.store.PersistentStore;
 import pl.kalisz.kamil.preffer.store.ProfileStore;
 import pl.kalisz.kamil.preffer.store.Store;

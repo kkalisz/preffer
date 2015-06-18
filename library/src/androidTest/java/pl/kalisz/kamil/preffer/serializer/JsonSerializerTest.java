@@ -1,4 +1,4 @@
-package pl.kalisz.kamil.preffer.serilizer;
+package pl.kalisz.kamil.preffer.serializer;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;

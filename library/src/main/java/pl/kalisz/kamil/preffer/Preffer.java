@@ -2,8 +2,8 @@ package pl.kalisz.kamil.preffer;
 
 import java.lang.reflect.Proxy;
 
-import pl.kalisz.kamil.preffer.serilizer.JsonSerializer;
-import pl.kalisz.kamil.preffer.serilizer.Serializer;
+import pl.kalisz.kamil.preffer.serializer.JsonSerializer;
+import pl.kalisz.kamil.preffer.serializer.Serializer;
 import pl.kalisz.kamil.preffer.store.Store;
 
 /**

@@ -1,4 +1,4 @@
-package pl.kalisz.kamil.preffer.serilizer;
+package pl.kalisz.kamil.preffer.serializer;
 
 /**
  * Interface for serialization and deserialization objects from and to String

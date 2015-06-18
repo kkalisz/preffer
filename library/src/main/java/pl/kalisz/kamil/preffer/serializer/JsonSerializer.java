@@ -1,4 +1,4 @@
-package pl.kalisz.kamil.preffer.serilizer;
+package pl.kalisz.kamil.preffer.serializer;
 
 import com.cedarsoftware.util.io.JsonReader;
 import com.cedarsoftware.util.io.JsonWriter;
