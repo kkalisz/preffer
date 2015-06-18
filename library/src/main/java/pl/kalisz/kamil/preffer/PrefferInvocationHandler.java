@@ -16,9 +16,9 @@ import pl.kalisz.kamil.preffer.store.Store;
  */
 public class PrefferInvocationHandler implements InvocationHandler
 {
-    private Store delegate;
+    private final Store delegate;
 
-    private String profile;
+    private final String profile;
 
     private Serializer serializer = new JsonSerializer();
 
@@ -29,6 +29,7 @@ public class PrefferInvocationHandler implements InvocationHandler
     }
 
 
+    @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 

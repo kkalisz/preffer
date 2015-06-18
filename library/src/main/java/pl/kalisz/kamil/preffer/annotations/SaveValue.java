@@ -4,7 +4,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * annotation that indicates method is used as access to prefernces
+ * annotation that indicates method is used as access to preferences
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SaveValue

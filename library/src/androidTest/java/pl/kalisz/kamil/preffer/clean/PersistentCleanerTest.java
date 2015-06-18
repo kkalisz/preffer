@@ -40,7 +40,7 @@ public class PersistentCleanerTest extends ActivityUnitTestCase<Activity>
         testPreferences.saveNonPersistentValue("someValue");
         testPreferences.savePersistentValue("someOtherValue");
 
-        Cleaner persistentCleaner = new PersistantCleaner();
+        Cleaner persistentCleaner = new PersistentCleaner();
         persistentCleaner.clean(store);
 
         String persistentValue = testPreferences.getPersistentValue();

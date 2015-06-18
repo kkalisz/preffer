@@ -6,6 +6,7 @@ import com.cedarsoftware.util.io.JsonWriter;
 /**
  * Implementation os Serializer that uses Json to Store objects
  */
+@SuppressWarnings("unchecked")
 public class JsonSerializer implements Serializer {
     @Override
     public <V> String serialize(Class<V> type, V objectToSerialize) {

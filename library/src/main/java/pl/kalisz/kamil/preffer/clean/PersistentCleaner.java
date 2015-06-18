@@ -8,7 +8,7 @@ import pl.kalisz.kamil.preffer.store.Store;
 /**
  * Cleaner implementation that removes only persistent values from {@link Store}
  */
-public class PersistantCleaner implements Cleaner
+public class PersistentCleaner implements Cleaner
 {
     @Override
     public void clean(Store store)

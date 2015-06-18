@@ -20,7 +20,7 @@ public class SharedPreferencesStore implements Store {
     @Override
     public void setValue(String key, String value)
     {
-        sharedPreferences.edit().putString(key,value).commit();
+        sharedPreferences.edit().putString(key,value).apply();
     }
 
     @Override

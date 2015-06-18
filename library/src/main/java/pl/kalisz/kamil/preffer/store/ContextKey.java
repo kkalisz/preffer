@@ -7,13 +7,13 @@ import org.json.JSONObject;
  */
 public class ContextKey
 {
-    public static final String CONTEXT_KEY = "CONTEXT_KEY";
+    private static final String CONTEXT_KEY = "CONTEXT_KEY";
 
-    public static final String RAW_KEY_KEY = "RAW_KEY_KEY";
+    private static final String RAW_KEY_KEY = "RAW_KEY_KEY";
 
-    private String context;
+    private final String context;
 
-    private String rawKey;
+    private final String rawKey;
 
     public ContextKey(String context, String rawKey) {
         this.context = context;
@@ -31,7 +31,7 @@ public class ContextKey
         }
         catch (Exception e)
         {
-            throw new IllegalArgumentException(String.format("can't create ContextKey for context: %s and key: %s",context,rawKey,e));
+            throw new IllegalArgumentException(String.format("can't create ContextKey for context: %s and key: %s",context,rawKey),e);
         }
     }
 
