@@ -42,7 +42,7 @@ public class PrefferTest extends ActivityUnitTestCase<Activity>
     public void testWhenTryCreatePreferencesThatAreNotInterfaceException()
     {
         try {
-            String prefferences = preffer.preffer(String.class);
+            String prefferences = preffer.get(String.class);
             Assert.fail();
         }
         catch (IllegalArgumentException e)
@@ -55,7 +55,7 @@ public class PrefferTest extends ActivityUnitTestCase<Activity>
     {
         Class<TestPreferenceInterface> preferenceClass = null;
         try {
-            TestPreferenceInterface prefferences = preffer.preffer(preferenceClass);
+            TestPreferenceInterface prefferences = preffer.get(preferenceClass);
             Assert.fail();
         }
         catch (NullPointerException e)

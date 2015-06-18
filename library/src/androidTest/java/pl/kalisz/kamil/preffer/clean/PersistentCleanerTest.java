@@ -36,7 +36,7 @@ public class PersistentCleanerTest extends ActivityUnitTestCase<Activity>
 
     public void testNonPersistentCleanerWillRemoveOnlyNonPersistentValues()
     {
-        TestPreferences testPreferences = preffer.preffer(TestPreferences.class);
+        TestPreferences testPreferences = preffer.get(TestPreferences.class);
         testPreferences.saveNonPersistentValue("someValue");
         testPreferences.savePersistentValue("someOtherValue");
 

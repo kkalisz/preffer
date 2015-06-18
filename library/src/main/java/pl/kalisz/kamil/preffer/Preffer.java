@@ -43,12 +43,24 @@ public class Preffer {
     }
 
     /**
+     * @deprecated use {@link #get(Class)} using method named same as class is not good idea
      * @param myPrefferClass class of interface of preferences to create
      * @param <V>            type of preference class
      * @return instantiated myPrefferClass
      */
     @SuppressWarnings("unchecked")
+    @Deprecated
     public <V> V preffer(Class<V> myPrefferClass) {
+        return get(myPrefferClass);
+    }
+
+    /**
+     * @param myPrefferClass class of interface of preferences to create
+     * @param <V>            type of preference class
+     * @return instantiated myPrefferClass
+     */
+    @SuppressWarnings("unchecked")
+    public <V> V get(Class<V> myPrefferClass) {
         if (myPrefferClass == null) {
             throw new NullPointerException("You can't create preferences from null class");
         }
