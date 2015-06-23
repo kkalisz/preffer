@@ -10,6 +10,7 @@ public class AccessTypeHolder
 {
     private final AccessType accessType;
     private final Class accessValueClass;
+    private boolean hasDefaultValue;
 
     public AccessTypeHolder(Method method)
     {
@@ -18,26 +19,31 @@ public class AccessTypeHolder
 
         if(parameterTypes.length > 1)
         {
-            throw new IllegalArgumentException("Save method must have exactly one parameter, load method can't have parameters");
+            throw new IllegalArgumentException("Save method must have exactly one parameter, load method can't have one parameters with default value");
         }
 
         boolean isReturn = returnType != void.class;
         boolean isParameter = parameterTypes.length == 1;
 
-        if(isReturn == isParameter)
+        if(isReturn && isParameter && returnType != parameterTypes[0])
         {
-            throw new IllegalArgumentException("Access Save method should have void return type and one parameter, Load method should have non void return type on zero parameters ");
+            throw new IllegalArgumentException("Access Save method should have void return type and one parameter, Load method should have non void return type on one optional parameters same type as return type ");
+        }
+        if(!isParameter && !isReturn)
+        {
+            throw new IllegalArgumentException("Access Save method should have void return type and one parameter, Load method should have non void return type on one optional parameters same type as return type ");
         }
 
-        if(isParameter)
-        {
-            accessType = AccessType.SET;
-            accessValueClass = parameterTypes[0];
-        }
-        else
+        if(isReturn)
         {
             accessType = AccessType.GET;
             accessValueClass = returnType;
+            hasDefaultValue = isParameter;
+        }
+        else
+        {
+            accessType = AccessType.SET;
+            accessValueClass = parameterTypes[0];
         }
     }
 
@@ -47,5 +53,9 @@ public class AccessTypeHolder
 
     public Class getAccessValueClass() {
         return accessValueClass;
+    }
+
+    public boolean hasDefaultValue() {
+        return hasDefaultValue;
     }
 }

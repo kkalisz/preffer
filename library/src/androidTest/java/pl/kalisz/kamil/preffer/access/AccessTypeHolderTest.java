@@ -56,16 +56,12 @@ public class AccessTypeHolderTest extends TestCase {
         Assert.assertEquals(accessTypeHolder.getAccessValueClass(),BigDecimal.class);
     }
 
-    public void testStringMethodWithOneParamThrowException() {
+    public void testStringMethodWithOneParam() {
         Method method = MethodUtils.extractMethod(TestClassWithMethods.class, "stringMethodWithOneParam");
+        AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
 
-        try {
-            AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
-            Assert.fail();
+        Assert.assertTrue(accessTypeHolder.hasDefaultValue());
 
-        } catch (IllegalArgumentException e) {
-            //we expected exception
-        }
     }
 
     public void testStringMethodWithTwoParamsThrowException() {

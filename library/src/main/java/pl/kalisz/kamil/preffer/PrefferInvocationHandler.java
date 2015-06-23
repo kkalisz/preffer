@@ -49,7 +49,12 @@ public class PrefferInvocationHandler implements InvocationHandler
         Class accesClass = accessTypeHolder.getAccessValueClass();
         switch (accessTypeHolder.getAccessType()) {
             case GET:
-                return serializer.deserialize(accesClass, saveStore.getValue(key));
+                Object returnObject = serializer.deserialize(accesClass, saveStore.getValue(key));
+                if(returnObject == null && accessTypeHolder.hasDefaultValue())
+                {
+                    returnObject = args[0];
+                }
+                return returnObject;
             case SET:
                 saveStore.setValue(key, serializer.serialize(accesClass,args[0]));
                 break;
