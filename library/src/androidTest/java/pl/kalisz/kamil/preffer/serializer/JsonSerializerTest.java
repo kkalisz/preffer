@@ -23,7 +23,7 @@ public class JsonSerializerTest extends TestCase
     {
         JsonSerializer jsonSerializer = new JsonSerializer();
 
-        Double deserializedValue = jsonSerializer.deserialize(Double.class, null);
+        Double deserializedValue = (Double) jsonSerializer.deserialize(Double.class, null);
 
         Assert.assertNull(deserializedValue);
     }
@@ -34,7 +34,7 @@ public class JsonSerializerTest extends TestCase
         BigDecimal value = new BigDecimal(5756.65);
 
         String serializedValue = jsonSerializer.serialize(BigDecimal.class,value);
-        BigDecimal deserializedValue = jsonSerializer.deserialize(BigDecimal.class, serializedValue);
+        BigDecimal deserializedValue = (BigDecimal) jsonSerializer.deserialize(BigDecimal.class, serializedValue);
 
         Assert.assertEquals(value,deserializedValue);
     }

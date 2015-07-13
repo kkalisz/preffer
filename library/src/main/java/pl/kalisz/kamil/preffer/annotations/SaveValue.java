@@ -1,5 +1,7 @@
 package pl.kalisz.kamil.preffer.annotations;
 
+import pl.kalisz.kamil.preffer.serializer.Serializer;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -23,4 +25,6 @@ public @interface SaveValue
      * @return value indicates that this preference is profile dependent
      */
     boolean profile() default false;
+
+    Class<? extends Serializer> serializer() default Serializer.class;
 }

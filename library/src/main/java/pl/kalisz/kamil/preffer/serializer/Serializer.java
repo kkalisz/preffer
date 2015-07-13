@@ -1,23 +1,23 @@
 package pl.kalisz.kamil.preffer.serializer;
 
+import java.util.Objects;
+
 /**
  * Interface for serialization and deserialization objects from and to String
  */
-public interface Serializer
+public interface Serializer<V extends Object>
 {
     /**
      * @param type of object to serialize
      * @param objectToSerialize object to serialize
-     * @param <V> type of objects
      * @return serialized object
      */
-    <V> String serialize(Class<V> type, V objectToSerialize);
+    String serialize(Class<V> type, V objectToSerialize);
 
     /***
      * @param type of object to serialize
      * @param objectToDeSerialize string to deserialize to object
-     * @param <V> type of objects
      * @return deserialized object
      */
-    <V> V deserialize(Class<V> type, String objectToDeSerialize);
+    V deserialize(Class<V> type, String objectToDeSerialize);
 }
