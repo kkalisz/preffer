@@ -2,6 +2,7 @@ package pl.kalisz.kamil.preffer;
 
 import java.lang.reflect.Proxy;
 
+import pl.kalisz.kamil.preffer.clean.Cleaner;
 import pl.kalisz.kamil.preffer.serializer.JsonSerializer;
 import pl.kalisz.kamil.preffer.serializer.Serializer;
 import pl.kalisz.kamil.preffer.store.Store;
@@ -66,10 +67,19 @@ public class Preffer {
         }
 
         if (!myPrefferClass.isInterface()) {
-            throw new IllegalArgumentException("You can create preferences only from interface");
+            throw new IllegalArgumentException(String.format("You can create preferences only from interface, class %s",myPrefferClass
+                    .getSimpleName()));
         }
         PrefferInvocationHandler invocationHandler = new PrefferInvocationHandler(store, profile, serializer);
         return (V) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{myPrefferClass}, invocationHandler);
+    }
+
+    /**
+     * @param cleaner cleaner instance used to clean store values
+     */
+    public void clean(Cleaner cleaner)
+    {
+        cleaner.clean(store);
     }
 
 
