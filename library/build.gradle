@@ -1,14 +1,17 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "22.0.1"
+    buildToolsVersion "22.0.0"
 
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+
     }
     buildTypes {
         debug {
@@ -20,6 +23,63 @@ android {
         }
     }
 }
+
+repositories {  // repozytoria Nexusa
+    // we also hit Nexus for all other dependencies!
+    maven {
+        url 'http://nexus:8080/nexus/content/repositories/snapshots/'
+    }
+    maven{
+        url 'http://nexus:8080/nexus/content/repositories/releases'
+    }
+}
+
+project.version = '0.3.1'
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+uploadArchives {
+    repositories {
+        // the maven plugin features this deployer
+        mavenDeployer {
+            // we deploy to the release repository in this case
+            repository(url: sonatypeRepo) {
+                authentication(userName: sonatypeUsername,
+                        password: sonatypePassword)
+            }
+            snapshotRepository(url: sonatypeSnapshotRepo) {
+                // values as variable names declared in ~/.gradle/gradle.properties
+                authentication(userName: sonatypeUsername,
+                        password: sonatypePassword)
+            }
+            pom.project {
+                artifactId 'preffer'
+                name 'preffer'
+                packaging 'aar'
+                groupId = 'pl.kalisz.kamil'
+            }
+        }
+    }
+}
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
