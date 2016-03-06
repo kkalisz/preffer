@@ -1,5 +1,11 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+
+def vcsLink = 'https://github.com/kkalisz/preffer.git'
+group = 'pl.kalisz.kamil'
+version = '0.3.1'
 
 android {
     compileSdkVersion 21
@@ -8,9 +14,10 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
+        archivesBaseName = 'preffer'
+        versionCode 1
+        versionName "0.3.1"
 
     }
     buildTypes {
@@ -24,17 +31,20 @@ android {
     }
 }
 
-repositories {  // repozytoria Nexusa
-    // we also hit Nexus for all other dependencies!
-    maven {
-        url 'http://nexus:8080/nexus/content/repositories/snapshots/'
-    }
-    maven{
-        url 'http://nexus:8080/nexus/content/repositories/releases'
+bintray {
+    user = binTrayUser
+    key = binTrayApiKey
+    configurations = ['archives']
+
+    pkg {
+        repo = 'maven'
+        name = archivesBaseName
+        userOrg = 'kamil-kalisz'
+        licenses = ['Apache-2.0']
+        vcsUrl = vcsLink
+        publish = true
     }
 }
-
-project.version = '0.3.1'
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -56,32 +66,9 @@ artifacts {
     archives sourcesJar
 }
 
-uploadArchives {
-    repositories {
-        // the maven plugin features this deployer
-        mavenDeployer {
-            // we deploy to the release repository in this case
-            repository(url: sonatypeRepo) {
-                authentication(userName: sonatypeUsername,
-                        password: sonatypePassword)
-            }
-            snapshotRepository(url: sonatypeSnapshotRepo) {
-                // values as variable names declared in ~/.gradle/gradle.properties
-                authentication(userName: sonatypeUsername,
-                        password: sonatypePassword)
-            }
-            pom.project {
-                artifactId 'preffer'
-                name 'preffer'
-                packaging 'aar'
-                groupId = 'pl.kalisz.kamil'
-            }
-        }
-    }
-}
-
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.cedarsoftware:json-io:4.1.2@jar"
 }
+
+bintrayUpload.dependsOn("install")
