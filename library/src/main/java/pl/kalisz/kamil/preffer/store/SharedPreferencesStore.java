@@ -18,13 +18,13 @@ public class SharedPreferencesStore implements Store {
     }
 
     @Override
-    public void setValue(String key, String value)
+    public synchronized void setValue(String key, String value)
     {
-        sharedPreferences.edit().putString(key,value).apply();
+        sharedPreferences.edit().putString(key,value).commit();
     }
 
     @Override
-    public String getValue(String key) {
+    public synchronized String getValue(String key) {
         return sharedPreferences.getString(key,null);
     }
 
