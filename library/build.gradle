@@ -32,18 +32,18 @@ android {
 }
 
 bintray {
-    user = binTrayUser
-    key = binTrayApiKey
-    configurations = ['archives']
+    user = binTrayUser          // id użytkownika
+    key = binTrayApiKey         // apiKey
+    configurations = ['archives']  // nazwa konfiguracji która ma być wykorzystana archives jest domyślna
 
-    pkg {
+    pkg {                       // nazwa rezpoytorium w bintray w którym mają być umieszczone artefakty
         repo = 'maven'
-        name = archivesBaseName
+        name = archivesBaseName  // nazwa projektu
         userOrg = 'kamil-kalisz'
-        licenses = ['Apache-2.0']
-        vcsUrl = vcsLink
-        publish = true
-    }
+        licenses = ['Apache-2.0'] // licencja projektu
+        vcsUrl = vcsLink  // link do rezpoytorium kodu
+        publish = true          // czy artefakty pwinny być wysłane do rezpoytrium
+        }
 }
 
 task sourcesJar(type: Jar) {
