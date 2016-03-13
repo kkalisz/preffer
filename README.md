@@ -24,7 +24,7 @@ public interface LangaugePreferences
 }
 ```
 
-First off all is creating Preffer object which i responsible for generetaing runtime preferences implementation.
+First off all is creating Preffer object which is responsible for generetaing runtime preferences implementation.
 ```java
 Preffer preffer = new Preffer(store);
 ```
@@ -84,7 +84,7 @@ public class AesStore implements Store
 
 	private AesCipher encryptCipher;
 
-	private AesCipher decyptCipher;
+	private AesCipher decryptCipher;
 
 	private Store delegate;
 
@@ -92,7 +92,7 @@ public class AesStore implements Store
 	public void setValue(String key, String value)
 	{
 		String encryptedKey = encryptCipher.doFinal(key);
-		String encryptedValue = new String(encryptCipher.doFinal(value));
+		String encryptedValue = encryptCipher.doFinal(value);
 		delegate.setValue(encryptedKey, encryptedValue);
 	}
 
@@ -101,7 +101,7 @@ public class AesStore implements Store
 	{
 		String encryptedKey = encryptCipher.doFinal(key);
 		String encryptedValue = delegate.getValue(encryptedKey);
-		return (decyptCipher.doFinal(encryptedValue));
+		return (decryptCipher.doFinal(encryptedValue));
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class AesStore implements Store
 		Set<String> decryptedKeys = new HashSet<String>();
 		for(String encryptedKey :delegate.getKeys())
 		{
-			decryptedKeys.add(decyptCipher.doFinal(encryptedKey));
+			decryptedKeys.add(decryptCipher.doFinal(encryptedKey));
 		}
 		return decryptedKeys;
 	}
