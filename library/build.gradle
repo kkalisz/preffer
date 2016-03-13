@@ -5,7 +5,7 @@ apply plugin: 'com.jfrog.bintray'
 
 def vcsLink = 'https://github.com/kkalisz/preffer.git'
 group = 'pl.kalisz.kamil'
-version = '0.3.1'
+version = '0.4.0-SNAPSHOT'
 
 android {
     compileSdkVersion 21
