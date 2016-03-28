@@ -17,8 +17,7 @@ android {
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
         archivesBaseName = 'preffer'
         versionCode 1
-        versionName "0.3.1"
-
+        versionName version
     }
     buildTypes {
         debug {
