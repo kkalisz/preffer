@@ -32,11 +32,11 @@ public class PrefferSharedPreferenceStoreTest extends ActivityInstrumentationTes
 
     public void testSetAndGetValueReturnProperValue()
     {
-        TestPreferenceInterface testPreferenceInterface = preffer.get(TestPreferenceInterface.class);
+        MyTestPreferences myTestPreferences = preffer.get(MyTestPreferences.class);
         String value = "MyValue";
 
-        testPreferenceInterface.setRunTest(value);
-        String loadedValue =  testPreferenceInterface.getRunTest();
+        myTestPreferences.setRunTest(value);
+        String loadedValue =  myTestPreferences.getRunTest();
 
         Assert.assertEquals(value,loadedValue);
     }

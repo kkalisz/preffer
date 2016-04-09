@@ -1,46 +1,15 @@
 package pl.kalisz.kamil.preffer;
 
-import android.app.Activity;
-import android.test.ActivityUnitTestCase;
-
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
-import java.util.Set;
-
-import pl.kalisz.kamil.preffer.store.Store;
-
-public class PrefferTest extends ActivityUnitTestCase<Activity>
+public class PrefferTest extends TestCase
 {
-    public PrefferTest() {
-        super(Activity.class);
-    }
-
-    private Preffer preffer;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        preffer = new Preffer(new Store()
-        {
-            @Override
-            public void setValue(String key, String value) {
-
-            }
-
-            @Override
-            public String getValue(String key) {
-                return null;
-            }
-
-            @Override
-            public Set<String> getKeys() {
-                return null;
-            }
-        });
-    }
 
     public void testWhenTryCreatePreferencesThatAreNotInterfaceException()
     {
+        Preffer preffer = new Preffer(new MemoryStore());
+
         try {
             String prefferences = preffer.get(String.class);
             Assert.fail();
@@ -53,9 +22,11 @@ public class PrefferTest extends ActivityUnitTestCase<Activity>
 
     public void testWhenTryCreatePreferencesFormNullException()
     {
-        Class<TestPreferenceInterface> preferenceClass = null;
+        Preffer preffer = new Preffer(new MemoryStore());
+
+        Class<MyTestPreferences> preferenceClass = null;
         try {
-            TestPreferenceInterface prefferences = preffer.get(preferenceClass);
+            MyTestPreferences prefferences = preffer.get(preferenceClass);
             Assert.fail();
         }
         catch (NullPointerException e)
@@ -64,4 +35,27 @@ public class PrefferTest extends ActivityUnitTestCase<Activity>
         }
     }
 
+    public void testWhenCreatePrefferWithProfileStoreProfilePreferencesAreProperSaved()
+    {
+        Preffer preffer = new Preffer(new MemoryStore(),"PROFILE");
+
+        MyTestPreferences myTestPreferences = preffer.get(MyTestPreferences.class);
+        myTestPreferences.setId("My_ID");
+
+        Assert.assertEquals("My_ID", myTestPreferences.getId("Null"));
+    }
+
+    public void testWhenCreatePrefferWithProfileStoreProfileValueForOtherProfileIsNotSpecified()
+    {
+        MemoryStore store = new MemoryStore();
+        Preffer profilePreffer = new Preffer(store,"PROFILE");
+        Preffer secondProfilePreffer = new Preffer(store,"OTHER_PROFILE");
+
+        MyTestPreferences myTestPreferences = profilePreffer.get(MyTestPreferences.class);
+        myTestPreferences.setId("My_ID");
+
+        MyTestPreferences secondPreferences = secondProfilePreffer.get(MyTestPreferences.class);
+
+        Assert.assertEquals("Null",secondPreferences.getId("Null"));
+    }
 }
