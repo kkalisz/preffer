@@ -9,6 +9,11 @@ import java.util.Set;
  */
 public class ContextKeyUtils
 {
+
+    private ContextKeyUtils()
+    {
+        // util class
+    }
     /**
      * @param keysToFilter list of keys to filter
      * @param context to filter keys
