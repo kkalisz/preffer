@@ -71,4 +71,8 @@ dependencies {
     compile "com.cedarsoftware:json-io:4.1.2@jar"
 }
 
+connectedCheck << {
+    println '##teamcity[jacocoReport dataPath=\'library/build/outputs/code-coverage/connected/coverage.ec\' includes=\'pl.kalisz.kamil*\' classpath=\'-:library/build/intermediates/classes/androidTest//** +:library/build/intermediates/classes/debug//**\']'
+}
+
 bintrayUpload.dependsOn("install")
