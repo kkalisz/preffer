@@ -6,7 +6,7 @@ apply plugin: 'jacoco'
 
 def vcsLink = 'https://github.com/kkalisz/preffer.git'
 group = 'pl.kalisz.kamil'
-version = '0.4.0-SNAPSHOT'
+version = '0.4.0'
 
 android {
     compileSdkVersion 27
