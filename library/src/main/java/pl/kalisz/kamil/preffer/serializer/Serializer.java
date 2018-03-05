@@ -1,7 +1,5 @@
 package pl.kalisz.kamil.preffer.serializer;
 
-import java.util.Objects;
-
 /**
  * Interface for serialization and deserialization objects from and to String
  */

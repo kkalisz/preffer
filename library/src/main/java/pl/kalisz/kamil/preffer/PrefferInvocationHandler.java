@@ -1,11 +1,13 @@
 package pl.kalisz.kamil.preffer;
 
+import android.text.TextUtils;
+import android.util.LruCache;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 import pl.kalisz.kamil.preffer.access.AccessTypeHolder;
 import pl.kalisz.kamil.preffer.annotations.SaveValue;
-import pl.kalisz.kamil.preffer.serializer.JsonSerializer;
 import pl.kalisz.kamil.preffer.serializer.Serializer;
 import pl.kalisz.kamil.preffer.store.PersistentStore;
 import pl.kalisz.kamil.preffer.store.ProfileStore;
@@ -20,7 +22,32 @@ public class PrefferInvocationHandler implements InvocationHandler
 
 	private final String profile;
 
-	private Serializer serializer = new JsonSerializer();
+	private Serializer serializer;
+
+	private LruCache<Method,Accessor> accessorLruCache = new LruCache<Method,Accessor>(12)
+	{
+		@Override
+		protected Accessor create(Method method) {
+			return createAccessor(method);
+		}
+	};
+
+
+	//visible for Testing
+	Accessor createAccessor(Method method) {
+		if(!method.isAnnotationPresent(SaveValue.class))
+        {
+            throw new IllegalArgumentException("Method must be annotated with SaveValue");
+        }
+		SaveValue saveValueAnnotation = method.getAnnotation(SaveValue.class);
+		if(TextUtils.isEmpty(saveValueAnnotation.key()))
+        {
+            throw new IllegalArgumentException("SavedValue.key can't be empty");
+        }
+		Store store = resolveSaveStore(saveValueAnnotation);
+		Serializer serializer = resolveSerializer(saveValueAnnotation);
+		return new Accessor(new AccessTypeHolder(method),store,serializer,saveValueAnnotation);
+	}
 
 	public PrefferInvocationHandler(Store delegate, String profile, Serializer serializer)
 	{
@@ -29,88 +56,23 @@ public class PrefferInvocationHandler implements InvocationHandler
 		this.serializer = serializer;
 	}
 
-
-	@SuppressWarnings("unchecked") @Override public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+	private Store resolveSaveStore(SaveValue saveValueAnnotation)
 	{
-		SaveValueHelper saveValueHelper = new SaveValueHelper(method);
-		return handlePreferenceMethod(args, saveValueHelper);
-	}
-
-	/**
-	 /**
-	 * @param methodArguments arguments of call preference method
-	 * @param saveValueHelper definition of preference method
-	 * @return method result or null if method return type is void
-	 */
-	private Object handlePreferenceMethod(Object[] methodArguments, SaveValueHelper saveValueHelper)
-	{
-		AccessTypeHolder accessTypeHolder = saveValueHelper.getAccessTypeHolder();
-		switch (accessTypeHolder.getAccessType())
+		Store store = delegate;
+		if (saveValueAnnotation.profile())
 		{
-			case GET:
-				return invokeGetPreference(methodArguments, saveValueHelper);
-			case SET:
-				invokeSetMethod(methodArguments, saveValueHelper);
-				break;
+			store = new ProfileStore(delegate, profile);
 		}
-		return null;
-	}
-
-	/**
-	 * @param methodArguments arguments of call preference method
-	 * @param saveValueHelper definition of preference method
-	 */
-	private void invokeSetMethod(Object[] methodArguments, SaveValueHelper saveValueHelper)
-	{
-		AccessTypeHolder accessTypeHolder = saveValueHelper.getAccessTypeHolder();
-		SaveValue annotation = saveValueHelper.getAnnotation();
-
-		Serializer serializer = resolveSerializer(annotation);
-		String serializedValue = serializer.serialize(accessTypeHolder.getAccessValueClass(), methodArguments[0]);
-
-		setValueToStore(annotation, serializedValue);
-	}
-
-	/**
-	 * @param methodArguments arguments of call preference method
-	 * @param saveValueHelper definition of preference method
-	 * @return preference value
-	 */
-	private Object invokeGetPreference(Object[] methodArguments, SaveValueHelper saveValueHelper)
-	{
-		AccessTypeHolder accessTypeHolder = saveValueHelper.getAccessTypeHolder();
-		SaveValue annotation = saveValueHelper.getAnnotation();
-
-		String valueToDeserialize = getValueFromStore(annotation);
-		Serializer serializer = resolveSerializer(annotation);
-
-		Object returnObject = serializer.deserialize(accessTypeHolder.getAccessValueClass(), valueToDeserialize);
-		return returnValueOrDefaultIfPresent(returnObject, methodArguments, accessTypeHolder);
-	}
-
-	/**
-	 * @param deserializedObject deserialized preference value
-	 * @param methodArguments arguments of method used to get default preference value
-	 * @param accessTypeHolder definition of preference method
-	 * @return return if deserializedObject value is null and defaultValue is not null, return defaultValue else return deserializedObject
-	 */
-	private Object returnValueOrDefaultIfPresent(Object deserializedObject, Object[] methodArguments, AccessTypeHolder accessTypeHolder)
-	{
-		if (deserializedObject == null && accessTypeHolder.hasDefaultValue())
+		if (saveValueAnnotation.persistent())
 		{
-			deserializedObject = methodArguments[0];
+			store = new PersistentStore(delegate);
 		}
-		return deserializedObject;
+		return store;
 	}
 
-	/**
-	 * @param annotation annotation that contains definition of preference
-	 * @return value of preference form store
-	 */
-	private String getValueFromStore(SaveValue annotation)
+	@SuppressWarnings("unchecked") @Override public Object invoke(Object proxy, Method method, Object[] args)
 	{
-		Store saveStore = resolveSaveStore(annotation);
-		return saveStore.getValue(annotation.key());
+		return accessorLruCache.get(method).access(args);
 	}
 
 	/**
@@ -142,32 +104,6 @@ public class PrefferInvocationHandler implements InvocationHandler
 		}
 	}
 
-	/**
-	 * @param saveValueAnnotation annotation that contains store definition
-	 * @return store builded using data from saveValueAnnotation
-	 */
-	private Store resolveSaveStore(SaveValue saveValueAnnotation)
-	{
-		Store store = delegate;
-		if (saveValueAnnotation.profile())
-		{
-			store = new ProfileStore(delegate, profile);
-		}
-		if (saveValueAnnotation.persistent())
-		{
-			store = new PersistentStore(delegate);
-		}
-		return store;
-	}
 
-	/**
-	 * @param annotation annotation with preference definition
-	 * @param valueToSave value to save
-	 */
-	public void setValueToStore(SaveValue annotation, String valueToSave)
-	{
-		Store saveStore = resolveSaveStore(annotation);
-		saveStore.setValue(annotation.key(), valueToSave);
-	}
 
 }

@@ -8,6 +8,15 @@ import java.lang.reflect.Method;
  */
 public class AccessTypeHolder
 {
+    /**
+     * enum that represents type of operation on preferences
+     */
+    public enum AccessType
+    {
+        SET,
+        GET
+    }
+
     private final AccessType accessType;
     private final Class accessValueClass;
     private boolean hasDefaultValue;

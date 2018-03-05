@@ -1,6 +1,5 @@
 package pl.kalisz.kamil.preffer.store;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -30,7 +29,7 @@ public class ContextKey
             jsonContextKey.put(RAW_KEY_KEY, rawKey);
             return jsonContextKey.toString();
         }
-        catch (JSONException e)
+        catch (Exception e)
         {
             throw new IllegalArgumentException(String.format("can't create ContextKey for context: %s and key: %s",context,rawKey),e);
         }

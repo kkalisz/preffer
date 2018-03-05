@@ -1,5 +1,7 @@
 package pl.kalisz.kamil.preffer;
 
+import android.util.LruCache;
+
 import java.lang.reflect.Proxy;
 
 import pl.kalisz.kamil.preffer.clean.Cleaner;
@@ -18,6 +20,21 @@ public class Preffer {
 
     private final Serializer serializer;
 
+    private final LruCache<Class, Object> preferenceCache = new LruCache<Class, Object>(12) {
+        @Override
+        protected Object create(Class myPrefferClass) {
+            if (myPrefferClass == null) {
+                throw new NullPointerException("You can't create preferences from null class");
+            }
+            if (!myPrefferClass.isInterface()) {
+                throw new IllegalArgumentException(String.format("You can create preferences only from interface, class %s", myPrefferClass
+                        .getSimpleName()));
+            }
+            PrefferInvocationHandler invocationHandler = new PrefferInvocationHandler(store, profile, serializer);
+            return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{myPrefferClass}, invocationHandler);
+        }
+    };
+
     /**
      * @param store that will store our preferences
      */
@@ -26,7 +43,7 @@ public class Preffer {
     }
 
     /**
-     * @param store that will store our preferences
+     * @param store      that will store our preferences
      * @param serializer that will handle serialization and deserialization of preference parameters
      */
     public Preffer(Store store, Serializer serializer) {
@@ -44,10 +61,10 @@ public class Preffer {
     }
 
     /**
-     * @deprecated use {@link #get(Class)} using method named same as class is not good idea
      * @param myPrefferClass class of interface of preferences to create
      * @param <V>            type of preference class
      * @return instantiated myPrefferClass
+     * @deprecated use {@link #get(Class)} using method named same as class is not good idea
      */
     @SuppressWarnings("unchecked")
     @Deprecated
@@ -62,23 +79,13 @@ public class Preffer {
      */
     @SuppressWarnings("unchecked")
     public <V> V get(Class<V> myPrefferClass) {
-        if (myPrefferClass == null) {
-            throw new NullPointerException("You can't create preferences from null class");
-        }
-
-        if (!myPrefferClass.isInterface()) {
-            throw new IllegalArgumentException(String.format("You can create preferences only from interface, class %s",myPrefferClass
-                    .getSimpleName()));
-        }
-        PrefferInvocationHandler invocationHandler = new PrefferInvocationHandler(store, profile, serializer);
-        return (V) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{myPrefferClass}, invocationHandler);
+        return (V) preferenceCache.get(myPrefferClass);
     }
 
     /**
      * @param cleaner cleaner instance used to clean store values
      */
-    public void clean(Cleaner cleaner)
-    {
+    public void clean(Cleaner cleaner) {
         cleaner.clean(store);
     }
 

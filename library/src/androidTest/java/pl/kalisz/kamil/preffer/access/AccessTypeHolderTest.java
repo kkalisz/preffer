@@ -30,7 +30,7 @@ public class AccessTypeHolderTest extends TestCase {
 
         AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
 
-        Assert.assertEquals(accessTypeHolder.getAccessType(),AccessType.SET);
+        Assert.assertEquals(accessTypeHolder.getAccessType(), AccessTypeHolder.AccessType.SET);
         Assert.assertEquals(accessTypeHolder.getAccessValueClass(),String.class);
     }
 
@@ -52,7 +52,7 @@ public class AccessTypeHolderTest extends TestCase {
 
         AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
 
-        Assert.assertEquals(accessTypeHolder.getAccessType(),AccessType.GET);
+        Assert.assertEquals(accessTypeHolder.getAccessType(), AccessTypeHolder.AccessType.GET);
         Assert.assertEquals(accessTypeHolder.getAccessValueClass(),BigDecimal.class);
     }
 
