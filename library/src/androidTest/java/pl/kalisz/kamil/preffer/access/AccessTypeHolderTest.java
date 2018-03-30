@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 import pl.kalisz.kamil.preffer.MethodUtils;
+import pl.kalisz.kamil.preffer.TestAnnotatedClass;
 
 /**
  * Created by kkalisz on 10.05.15.
@@ -16,7 +17,7 @@ public class AccessTypeHolderTest extends TestCase {
         Method method = MethodUtils.extractMethod(TestClassWithMethods.class, "voidMethodWithNoParam");
 
         try {
-            AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
+            new AccessTypeHolder(method);
             Assert.fail();
 
         } catch (IllegalArgumentException e) {
@@ -30,7 +31,7 @@ public class AccessTypeHolderTest extends TestCase {
 
         AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
 
-        Assert.assertEquals(accessTypeHolder.getAccessType(), AccessTypeHolder.AccessType.SET);
+        Assert.assertEquals(accessTypeHolder.getAccessType(),AccessTypeHolder.AccessType.SET);
         Assert.assertEquals(accessTypeHolder.getAccessValueClass(),String.class);
     }
 
@@ -38,7 +39,7 @@ public class AccessTypeHolderTest extends TestCase {
         Method method = MethodUtils.extractMethod(TestClassWithMethods.class, "voidMethodWithTwoParams");
 
         try {
-            AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
+            new AccessTypeHolder(method);
             Assert.fail();
 
         } catch (IllegalArgumentException e) {
@@ -52,7 +53,7 @@ public class AccessTypeHolderTest extends TestCase {
 
         AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
 
-        Assert.assertEquals(accessTypeHolder.getAccessType(), AccessTypeHolder.AccessType.GET);
+        Assert.assertEquals(accessTypeHolder.getAccessType(),AccessTypeHolder.AccessType.GET);
         Assert.assertEquals(accessTypeHolder.getAccessValueClass(),BigDecimal.class);
     }
 
@@ -63,18 +64,4 @@ public class AccessTypeHolderTest extends TestCase {
         Assert.assertTrue(accessTypeHolder.hasDefaultValue());
 
     }
-
-    public void testStringMethodWithTwoParamsThrowException() {
-        Method method = MethodUtils.extractMethod(TestClassWithMethods.class, "stringMethodWithTwoParams");
-
-        try {
-            AccessTypeHolder accessTypeHolder = new AccessTypeHolder(method);
-            Assert.fail();
-
-        } catch (IllegalArgumentException e) {
-            //we expected exception
-        }
-    }
-
-
 }

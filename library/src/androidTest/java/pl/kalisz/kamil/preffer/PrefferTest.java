@@ -1,61 +1,67 @@
 package pl.kalisz.kamil.preffer;
 
+import android.app.Activity;
+import android.test.ActivityUnitTestCase;
+
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
-public class PrefferTest extends TestCase
-{
+import java.util.Set;
 
-    public void testWhenTryCreatePreferencesThatAreNotInterfaceException()
-    {
-        Preffer preffer = new Preffer(new MemoryStore());
+import pl.kalisz.kamil.preffer.store.Store;
 
+public class PrefferTest extends ActivityUnitTestCase<Activity> {
+    public PrefferTest() {
+        super(Activity.class);
+    }
+
+    private Preffer preffer;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        preffer = new Preffer(new Store() {
+            @Override
+            public void setValue(String key, String value) {
+
+            }
+
+            @Override
+            public String getValue(String key) {
+                return null;
+            }
+
+            @Override
+            public Set<String> getKeys() {
+                return null;
+            }
+        });
+    }
+
+    public void testWhenTryCreatePreferencesThatAreNotInterfaceException() {
         try {
-            String prefferences = preffer.get(String.class);
+            preffer.get(String.class);
             Assert.fail();
-        }
-        catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             // we expect exception
         }
     }
 
-    public void testWhenTryCreatePreferencesFormNullException()
-    {
-        Preffer preffer = new Preffer(new MemoryStore());
-
-        Class<MyTestPreferences> preferenceClass = null;
+    public void testWhenTryCreatePreferencesFormNullException() {
+        Class<TestPreferenceInterface> preferenceClass = null;
         try {
-            MyTestPreferences prefferences = preffer.get(preferenceClass);
+            preffer.get(preferenceClass);
             Assert.fail();
-        }
-        catch (NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             // we expect exception
         }
     }
 
-    public void testWhenCreatePrefferWithProfileStoreProfilePreferencesAreProperSaved()
-    {
-        Preffer preffer = new Preffer(new MemoryStore(),"PROFILE");
 
-        MyTestPreferences myTestPreferences = preffer.get(MyTestPreferences.class);
-        myTestPreferences.setId("My_ID");
+    public void testWhenTryGetPReferencesForNextTimeSameInstanceIsReturned() {
+        TestPreferenceInterface preferences = preffer.get(TestPreferenceInterface.class);
+        TestPreferenceInterface secondPreferences = preffer.get(TestPreferenceInterface.class);
 
-        Assert.assertEquals("My_ID", myTestPreferences.getId("Null"));
+        Assert.assertSame(preferences, secondPreferences);
     }
 
-    public void testWhenCreatePrefferWithProfileStoreProfileValueForOtherProfileIsNotSpecified()
-    {
-        MemoryStore store = new MemoryStore();
-        Preffer profilePreffer = new Preffer(store,"PROFILE");
-        Preffer secondProfilePreffer = new Preffer(store,"OTHER_PROFILE");
-
-        MyTestPreferences myTestPreferences = profilePreffer.get(MyTestPreferences.class);
-        myTestPreferences.setId("My_ID");
-
-        MyTestPreferences secondPreferences = secondProfilePreffer.get(MyTestPreferences.class);
-
-        Assert.assertEquals("Null",secondPreferences.getId("Null"));
-    }
 }
