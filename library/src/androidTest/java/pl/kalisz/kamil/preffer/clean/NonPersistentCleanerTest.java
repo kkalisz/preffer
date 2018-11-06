@@ -7,8 +7,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.test.ActivityUnitTestCase;
 import android.text.TextUtils;
+import android.util.Log;
 
 import junit.framework.Assert;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import pl.kalisz.kamil.preffer.Preffer;
 import pl.kalisz.kamil.preffer.store.SharedPreferencesStore;
@@ -48,6 +53,21 @@ public class NonPersistentCleanerTest extends ActivityUnitTestCase<Activity>
 
         Assert.assertTrue(TextUtils.isEmpty(nonPersistentValue));
         Assert.assertFalse(TextUtils.isEmpty(persistentValue));
+    }
+
+    public void test2fs() throws InterruptedException {
+       OtherTestPreferences otherTestPreferences = preffer.get(OtherTestPreferences.class);
+        List<TestData> testData = new ArrayList<>();
+        for(int i =0 ; i< 6000; i++){
+            testData.add(new TestData(new Date(),"3432",true));
+        }
+        Thread.sleep(1000);
+
+        Log.d("start","save "+System.currentTimeMillis());
+        otherTestPreferences.save(testData);
+        Log.d("start","read "+System.currentTimeMillis());
+        List<TestData> testData2 = otherTestPreferences.getValue();
+        Log.d("start","end "+System.currentTimeMillis());
     }
 
 }
